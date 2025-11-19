@@ -1,3 +1,4 @@
+import Auth from "./pages/Auth";
 import React, { useContext } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
@@ -25,7 +26,9 @@ function App() {
     >
       <Navbar />
       <Routes>
+        
         <Route path='/' element={<HomePage />} />
+        <Route path="/auth" element={<Auth />} />
         <Route path='/GuidePage' element={<GuidePage />} />
         <Route path='/SchedulePage' element={<SchedulePage />} />
         <Route path='/DocsPage' element={<DocsPage />} />
