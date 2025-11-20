@@ -76,48 +76,39 @@ export default function Navbar() {
         )}
         onClick={toggleNavbar}
       >
-        <li className="mb-4 sm:mb-0 sm:ml-8 nav-item text-center">
-          <NavLink
-            to="/GuidePage"
-            className={({ isActive }) => navLinkClass(isActive, theme)}
-          >
-            Guide
-          </NavLink>
-        </li>
-        <li className="mb-4 sm:mb-0 sm:ml-8 nav-item text-center">
-          <NavLink
-            to="/SchedulePage"
-            className={({ isActive }) => navLinkClass(isActive, theme)}
-          >
-            Schedule
-          </NavLink>
-        </li>
-        <li className="mb-4 sm:mb-0 sm:ml-8 nav-item text-center">
-          <NavLink
-            className={({ isActive }) => navLinkClass(isActive, theme)}
-            to="/DocsPage"
-          >
-            Docs
-          </NavLink>
-        </li>
-        <li className="mb-4 sm:mb-0 sm:ml-8 nav-item text-center">
-          <NavLink
-            className={({ isActive }) => navLinkClass(isActive, theme)}
-            to="/ContributorsPage"
-          >
-            Contributors
-          </NavLink>
-        </li>
+     
+<li className="mb-4 sm:mb-0 sm:ml-8 nav-item text-center">
+  <NavLink
+    to="/auth"
+    className={({ isActive }) => navLinkClass(isActive, theme)}
+    onClick={(e) => {
+      // Defensive guard: prevent full page reload if anchor would trigger it.
+      // Attempt React Router navigation by letting NavLink handle it normally.
+      // But if NavLink causes a reload (router not ready) we fallback to pushState.
+      // We detect reload by using a small timeout — if page unload starts, cancel fallback.
+      let didUnload = false;
+      const onBeforeUnload = () => { didUnload = true; };
+      window.addEventListener("beforeunload", onBeforeUnload);
 
-        {/* ← NEW: Login link — uses client-side routing to avoid server 404 */}
-        <li className="mb-4 sm:mb-0 sm:ml-8 nav-item text-center">
-          <NavLink
-            to="/auth"
-            className={({ isActive }) => navLinkClass(isActive, theme)}
-          >
-            Login
-          </NavLink>
-        </li>
+      // After short delay, if page didn't start unloading, do a client pushState
+      setTimeout(() => {
+        window.removeEventListener("beforeunload", onBeforeUnload);
+        if (!didUnload) {
+          // If the URL already changed to /auth, do nothing.
+          if (window.location.pathname !== "/auth") {
+            // pushState + popstate triggers your router to handle the route
+            window.history.pushState({}, "", "/auth");
+            window.dispatchEvent(new PopStateEvent("popstate"));
+          }
+        }
+      }, 60);
+      // Note: allow NavLink default behavior; fallback only runs if it didn't trigger a full navigation.
+    }}
+  >
+    Login
+  </NavLink>
+</li>
+
       </ul>
 
       <button onClick={toggleTheme} className="text-2xl">
