@@ -61,7 +61,7 @@ export default function Navbar() {
       <a href="/">
         <img
           src="https://user-images.githubusercontent.com/88102392/233238344-b05e3c5d-178e-4a7b-9757-60063fb0f969.png"
-          className="inline-flex h-[1] w-10 items-center justify-center rounded-lg" // don't change logo's height and width here
+          className="inline-flex h-[1] w-10 items-center justify-center rounded-lg"
           alt="Gym Junkies logo"
           loading="lazy"
         ></img>
@@ -69,7 +69,6 @@ export default function Navbar() {
 
       <ul
         ref={navbarRef}
-        // className='flex flex-wrap items-center justify-center gap-2 text-[1rem]'
         className={clsx(
           `fixed sm:static top-20 z-10 gap-2 text-md w-full sm:flex flex-wrap items-center justify-center nav-menu`,
           theme.background === "#fff" ? "bg-white" : "bg-black",
@@ -109,7 +108,18 @@ export default function Navbar() {
             Contributors
           </NavLink>
         </li>
+
+        {/* ← NEW: Login link — uses client-side routing to avoid server 404 */}
+        <li className="mb-4 sm:mb-0 sm:ml-8 nav-item text-center">
+          <NavLink
+            to="/auth"
+            className={({ isActive }) => navLinkClass(isActive, theme)}
+          >
+            Login
+          </NavLink>
+        </li>
       </ul>
+
       <button onClick={toggleTheme} className="text-2xl">
         {theme.icon}
       </button>
